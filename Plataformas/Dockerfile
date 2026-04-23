@@ -1,11 +1,18 @@
-FROM image-registry.openshift-image-registry.svc:5000/openshift/nginx
+FROM nginx:alpine
 
-USER root
+# Copiar contenido web
+COPY . /usr/share/nginx/html/
 
-# Copiar tu app al lugar correcto
-COPY . /opt/app-root/src
+# Config nginx compatible con OpenShift
+RUN sed -i 's/listen       80;/listen       8080;/' /etc/nginx/conf.d/default.conf
 
-# Dar permisos correctos
-RUN chown -R 1001:0 /opt/app-root/src && chmod -R g+rw /opt/app-root/src
+# Permisos correctos
+RUN chown -R 1001:0 /usr/share/nginx/html && \
+    chmod -R g+rw /usr/share/nginx/html
 
+# Cambiar a usuario no root
 USER 1001
+
+EXPOSE 8080
+
+CMD ["nginx", "-g", "daemon off;"]
