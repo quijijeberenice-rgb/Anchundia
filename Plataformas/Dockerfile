@@ -1,16 +1,9 @@
 FROM nginx:alpine
 
-# Copiar archivos
-COPY . /usr/share/nginx/html/
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY index.html /usr/share/nginx/html/index.html
 
-# Permisos para OpenShift (MUY IMPORTANTE)
-RUN chmod -R 777 /usr/share/nginx/html && \
-    chmod -R 777 /var/cache/nginx && \
-    chmod -R 777 /var/run && \
-    chmod -R 777 /etc/nginx
+RUN chmod -R 777 /usr/share/nginx/html
 
-# Puerto correcto
 EXPOSE 8080
 
 CMD ["nginx", "-g", "daemon off;"]
